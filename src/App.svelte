@@ -1,20 +1,29 @@
+<script>
+	import { onMount } from "svelte";
+	import { Container, Row, Col } from "sveltestrap";
+
+	import { getRandomDadJoke } from "./request";
+	import DJForm from "./Component/Form.svelte";
+	import DJJoke from "./Component/Joke.svelte";
+	import DJTitle from "./Component/Title.svelte";
+
+	let joke = "";
+	onMount(async () => {
+		joke = await getRandomDadJoke();
+	});
+</script>
 
 <main>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+
+<Container>
+	<DJTitle />
+	<DJForm />
+	<DJJoke {joke} />
+</Container>
 </main>
 
 <style>
 	main {
 		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
 	}
 </style>
