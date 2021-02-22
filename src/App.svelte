@@ -7,6 +7,7 @@
 	import DJForm from "./Component/Form.svelte";
 	import DJJoke from "./Component/Joke.svelte";
 	import DJTitle from "./Component/Title.svelte";
+	import Transition from "./Component/Transition.svelte";
 
 	// mode goes to "loading" during each request.
 	// that way, the display is cleared until the reqeust has arrived.
@@ -31,6 +32,8 @@
 		term = e.detail;
 		try {
 			foundJokes = await searchJokes(term);
+			// want to erase the search input ... but also erases the error message.
+			// term = ''
 			mode = "search";
 		} catch (e) {
 			alert("There was an error!");
@@ -46,20 +49,24 @@
 	<Container>
 		<DJTitle />
 		<DJForm on:search={onSearch} />
+		<Button block on:click={onRandomJoke} color="danger">
+			Get Another Random Joke
+		</Button>
 		<!-- debugging! {mode} -->
 		{#if mode === "random"}
-			<DJJoke {joke} />
+			<Transition>
+				<DJJoke {joke} />
+			</Transition>
 		{/if}
 		{#if mode === "search"}
-			{#each foundJokes as jokeObj}
-				<DJJoke joke={jokeObj.joke} />
-			{:else}
-				<p>I don't have any jokes for #{term}</p>
-			{/each}
+			<Transition>
+				{#each foundJokes as jokeObj}
+					<DJJoke joke={jokeObj.joke} />
+				{:else}
+					<p>I don't have any jokes for #{term}</p>
+				{/each}
+			</Transition>
 		{/if}
-		<Button block on:click={onRandomJoke} color="danger">
-			Get Another
-		</Button>
 	</Container>
 </main>
 
